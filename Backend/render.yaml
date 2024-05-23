@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: my-backend-service
+    env: node
+    plan: free
+    rootDir: your_backend_dir
+    buildCommand: npm install && npm run build
+    startCommand: node server.js
