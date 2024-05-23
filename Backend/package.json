@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npm Build"
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [],
   "author": "",
