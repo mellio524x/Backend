@@ -2,9 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const app = express();
+const cors = require('cors');
 
 const RECAPTCHA_SECRET_KEY = '6LcOU-YpAAAAAJSsgO8bm53kqe2fCO3Tf6JwajBv'; // Replace with your actual secret key
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/api/verify-recaptcha', async (req, res) => {
