@@ -2,12 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-
-app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://green-oz9r.onrender.com https://cdn.segment.com");
-  next();
-});
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
