@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,7 +25,8 @@ app.post('/api/verify-recaptcha', async (req, res) => {
   const apiURL = `https://recaptchaenterprise.googleapis.com/v1/projects/backend-4f905/assessments?key=${apiKey}`;
 
   try {
-    const response = await fetch(apiURL, {
+    const fetch = await import('node-fetch'); // Use dynamic import
+    const response = await fetch.default(apiURL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody)
