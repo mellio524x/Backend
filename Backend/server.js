@@ -16,10 +16,17 @@ app.get('/', (req, res) => {
   res.send('Cookie is set');
 });
 
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://cdn.segment.com https://green-oz9r.onrender.com; object-src 'none'; style-src 'self';");
+  next();
+});
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.get('/', (req, res) => {
+    res.send('<html><head></head><body><h1>Hello, world!</h1></body></html>');
+  });
 
 // Route for verifying reCAPTCHA
 app.post('/api/verify-recaptcha', async (req, res) => {
