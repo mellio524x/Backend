@@ -1,9 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const app = express();
+app.use(cookieParser());
 const PORT = process.env.PORT || 5000;
+
+app.get('/', (req, res) => {
+  res.cookie('session', '1', {
+    sameSite: 'Lax', // or 'Strict' or 'None' if Secure is true
+    secure: true,    // required if sameSite is 'None'
+    httpOnly: true,
+  });
+  res.send('Cookie is set');
+});
+
 
 // Middleware
 app.use(cors());
