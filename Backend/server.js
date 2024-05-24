@@ -9,8 +9,10 @@ app.use(bodyParser.json());
 
 app.post('/api/verify-recaptcha', async (req, res) => {
   const { recaptchaToken } = req.body;
+  console.log('Received reCAPTCHA token:', recaptchaToken);
 
   if (!recaptchaToken) {
+    console.log('No reCAPTCHA token provided');
     return res.status(400).json({ success: false, message: 'No reCAPTCHA token provided' });
   }
 
@@ -23,6 +25,7 @@ app.post('/api/verify-recaptcha', async (req, res) => {
     });
 
     const data = response.data;
+    console.log('reCAPTCHA verification response:', data);
 
     if (data.success) {
       return res.json({ success: true });
@@ -30,6 +33,7 @@ app.post('/api/verify-recaptcha', async (req, res) => {
       return res.json({ success: false, message: 'reCAPTCHA verification failed' });
     }
   } catch (error) {
+    console.error('Error during reCAPTCHA verification:', error);
     return res.status(500).json({ success: false, message: 'Error during reCAPTCHA verification' });
   }
 });
