@@ -1,45 +1,50 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const axios = require('axios');
-const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const fetch = require('node-fetch');
 
-const RECAPTCHA_SECRET_KEY = '6LcOU-YpAAAAAJSsgO8bm53kqe2fCO3Tf6JwajBv'; // Replace with your actual secret key
+const app = express();
+const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
+// Route for verifying reCAPTCHA
 app.post('/api/verify-recaptcha', async (req, res) => {
-  const { recaptchaToken } = req.body;
-  console.log('Received reCAPTCHA token:', recaptchaToken);
+  const { recaptchaToken, userAction } = req.body;
+  const apiKey = 'AIzaSyAAcCCwieFmvtH4rIr0yCzxf5GwJb4FWO0'; // Replace with your actual API key
 
-  if (!recaptchaToken) {
-    console.log('No reCAPTCHA token provided');
-    return res.status(400).json({ success: false, message: 'No reCAPTCHA token provided' });
-  }
+  const requestBody = {
+    event: {
+      token: recaptchaToken,
+      expectedAction: userAction,
+      siteKey: '6LcOU-YpAAAAAFKW2xtEQjE4v7EIfNOGiPA8VBY1'
+    }
+  };
+
+  const apiURL = `https://recaptchaenterprise.googleapis.com/v1/projects/backend-4f905/assessments?key=${apiKey}`;
 
   try {
-    const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
-      params: {
-        secret: RECAPTCHA_SECRET_KEY,
-        response: recaptchaToken
-      }
+    const response = await fetch(apiURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody)
     });
 
-    const data = response.data;
-    console.log('reCAPTCHA verification response:', data);
+    const result = await response.json();
 
-    if (data.success) {
-      return res.json({ success: true });
+    if (result.tokenProperties && result.tokenProperties.valid) {
+      res.json({ success: true });
     } else {
-      return res.json({ success: false, message: 'reCAPTCHA verification failed' });
+      res.json({ success: false, errors: result['error-codes'] });
     }
   } catch (error) {
-    console.error('Error during reCAPTCHA verification:', error);
-    return res.status(500).json({ success: false, message: 'Error during reCAPTCHA verification' });
+    res.status(500).json({ success: false, error: 'Failed to verify reCAPTCHA' });
   }
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
