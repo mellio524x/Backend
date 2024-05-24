@@ -1,36 +1,39 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const axios = require('axios');
-
 const app = express();
-app.use(express.json());
 
-const recaptchaSecretKey = '6LcOU-YpAAAAAJSsgO8bm53kqe2fCO3Tf6JwajBv';
+const RECAPTCHA_SECRET_KEY = '6LcOU-YpAAAAAJSsgO8bm53kqe2fCO3Tf6JwajBv'; // Replace with your actual secret key
+
+app.use(bodyParser.json());
 
 app.post('/api/verify-recaptcha', async (req, res) => {
   const { recaptchaToken } = req.body;
 
+  if (!recaptchaToken) {
+    return res.status(400).json({ success: false, message: 'No reCAPTCHA token provided' });
+  }
+
   try {
     const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
       params: {
-        secret: recaptchaSecretKey,
-        response: recaptchaToken,
-      },
+        secret: RECAPTCHA_SECRET_KEY,
+        response: recaptchaToken
+      }
     });
 
     const data = response.data;
 
     if (data.success) {
-      res.json({ success: true });
+      return res.json({ success: true });
     } else {
-      res.json({ success: false, error: data['error-codes'] });
+      return res.json({ success: false, message: 'reCAPTCHA verification failed' });
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Server error' });
+    return res.status(500).json({ success: false, message: 'Error during reCAPTCHA verification' });
   }
 });
 
-// Other middleware and routes...
-
-app.listen(3001, () => {
-  console.log('Server running on port 3001');
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
