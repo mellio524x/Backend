@@ -1,24 +1,52 @@
 {
   
   "name": "my-backend",
+  
   "version": "1.0.0",
+  
   "scripts": {
-    "start": "node server.js"
+  
+    
+  "start": "node server.js"
+  
   },
+  
   "dependencies": {
-    "axios": "^1.7.2",
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "node-fetch": "^3.3.2"
+  
+    
+  "axios": "^1.7.2",
+  
+    
+  "cookie-parser": "^1.4.6",
+  
+    
+  "cors": "^2.8.5",
+  
+    
+  "express": "^4.19.2",
+  
+    
+  "node-fetch": "^3.3.2"
+  
   },
+  
   "devDependencies": {
-    "webpack": "^5.37.1",
-    "webpack-cli": "^4.10.0"
+  
+    
+  "webpack": "^5.37.1",
+  
+    
+  "webpack-cli": "^4.10.0"
+  
   },
+  
   "main": "server.js",
+  
   "keywords": [],
+  
   "author": "",
+  
   "license": "ISC",
+  
   "description": ""
 }
-
